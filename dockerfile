@@ -33,6 +33,7 @@ RUN adduser --system --uid 1001 torbox-plex
 
 COPY --from=builder --chown=torbox-plex:nodejs /app/config ./config
 COPY --from=builder --chown=torbox-plex:nodejs /app/dist ./
+COPY --from=builder --chown=torbox-plex:nodejs /app/node_modules ./
 
 COPY --chown=torbox-plex:nodejs ./prisma ./prisma
 COPY --chown=torbox-plex:nodejs ./entrypoint.sh ./entrypoint.sh
