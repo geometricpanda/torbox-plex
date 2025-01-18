@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "baseUrl": "./",
+    "outDir": "dist",
+    "paths": {
+      "@/libs/*": [
+        "src/libs/*"
+      ]
+    }
+  },
+  "exclude": [
+    "dist"
+  ]
+}

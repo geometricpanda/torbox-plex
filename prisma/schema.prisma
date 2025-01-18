@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Grabs {
+  grab_id       String    @id @unique @default(cuid())
+  arr           String
+  arr_id        Int
+  title         String
+  folder_path   String
+  release_title String
+  torrent       Torrents?
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @default(now()) @updatedAt
+}
+
+model Torrents {
+  torrent_id         String         @id @unique @default(cuid())
+  file               String
+  path               String         @unique
+  type               String
+  torbox_id          Int?
+  torbox_hash        String?
+  torbox_auth_id     String?
+  grab               Grabs?         @relation(fields: [grab_id], references: [grab_id])
+  grab_id            String?        @unique
+  created_at         DateTime       @default(now())
+  updated_at         DateTime       @default(now()) @updatedAt
+  torrent_files      TorrentFiles[]
+  torrent_info_errors Int            @default(0)
+  torrent_info_last_error DateTime?
+}
+
+model TorrentFiles {
+  torrent_file_id String   @id @unique @default(cuid())
+  torrent_id      String
+  torrent         Torrents @relation(fields: [torrent_id], references: [torrent_id])
+  file            String
+  created_at      DateTime @default(now())
+  updated_at      DateTime @default(now()) @updatedAt
+}

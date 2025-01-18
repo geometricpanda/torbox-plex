@@ -1,0 +1,27 @@
+{
+  "torboxPlex": {
+    "videoFileTypes": ["mkv", "mp4"],
+    "videoFileIgnores": ["sample", "trailer"]
+  },
+  "torbox": {
+    "apiUrl": "https://api.torbox.app",
+    "apiKey": null
+  },
+  "scheduledJobs": {
+    "healOrphans": {
+      "interval": 60000,
+      "enabled": true,
+      "runAtStartup": true
+    },
+    "syncTorrentContents": {
+      "interval": 60000,
+      "enabled": true,
+      "runAtStartup": true
+    }
+  },
+  "torrentBlackhole": {
+    "enabled": true,
+    "scanAtStartup": true,
+    "path": "/data/blackhole"
+  }
+}

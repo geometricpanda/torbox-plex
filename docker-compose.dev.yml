@@ -1,0 +1,23 @@
+name: Torbox Plex Dev
+
+services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: torbox-plex
+      POSTGRES_PASSWORD: some-password
+      POSTGRES_DB: torbox-plex
+      POSTGRES_LOGGING_LEVEL: error
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    networks:
+      - torbox_plex
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+
+networks:
+  torbox_plex:
+    driver: bridge
