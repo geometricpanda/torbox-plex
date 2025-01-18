@@ -1,24 +1,37 @@
 name: Torbox Plex
 
 services:
-  app:
+  torbox-plex:
     image: jimdrury/torbox-plex:main
     restart: unless-stopped
+    networks:
+      - torbox-network
     environment:
-      DATABASE_URL: "postgresql://casaos:casaos@192.168.1.49:5432/casaos"
+      PGID: 1000
+      PUID: 1000
+      DATABASE_URL: "postgresql://casaos:casaos@postgres:5432/casaos"
     depends_on:
       - postgres
     ports:
       - "3000:3000"
     volumes:
-      - ./tmp/blackhole:/data/blackhole
+      - ./DATA/Blackhole:/data/blackhole
 
   postgres:
     image: postgres:15
+    networks:
+      - torbox-network
     environment:
-      POSTGRES_USER: torbox-plex
-      POSTGRES_PASSWORD: some-password
-      POSTGRES_DB: torbox-plex
+      PGID: 1000
+      PUID: 1000
+      TZ: Europe/London
+      POSTGRES_USER: casaos
+      POSTGRES_PASSWORD: casaos
+      POSTGRES_DB: casaos
       POSTGRES_LOGGING_LEVEL: error
     volumes:
-      - ./tmp/db:/var/lib/postgresql/data
+      - ./DATA/AppData/postgresql/data:/var/lib/postgresql/data
+
+networks:
+  torbox-network:
+    driver: bridge
