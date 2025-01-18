@@ -11,7 +11,7 @@ import { webhooksPlugin } from './http/webhooks';
 const app = async () => {
   const fastify = Fastify({
     logger: {
-      level: 'warn',
+      level: process.env.LOG_LEVEL || 'warn',
       transport: { target: 'pino-pretty' },
     },
   });
