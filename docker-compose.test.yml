@@ -1,15 +1,20 @@
-name: Torbox Plex
+name: Torbox Plex Test
 
 services:
   app:
-    image: jimdrury/torbox-plex:main
+    build:
+      context: .
+      args:
+        DATABASE_URL: "postgresql://torbox-plex:some-password@postgres:5432/torbox-plex"
     restart: unless-stopped
-    environment:
-      DATABASE_URL: "postgresql://casaos:casaos@192.168.1.49:5432/casaos"
     depends_on:
       - postgres
+    environment:
+      DEBUG: 'torbox-plex:*'
     ports:
       - "3000:3000"
+    networks:
+      - torbox_plex
     volumes:
       - ./tmp/blackhole:/data/blackhole
 
@@ -22,3 +27,14 @@ services:
       POSTGRES_LOGGING_LEVEL: error
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
+    networks:
+      - torbox_plex
+    ports:
+      - "5432:5432"
+
+volumes:
+  postgres_data:
+
+networks:
+  torbox_plex:
+    driver: bridge
