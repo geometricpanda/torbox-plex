@@ -44,3 +44,12 @@ model TorrentFiles {
   created_at      DateTime @default(now())
   updated_at      DateTime @default(now()) @updatedAt
 }
+
+model HttpRequest {
+  request_id String @id @unique @default(cuid())
+  url        String
+  method     String
+  headers    String
+  body       String
+  created_at DateTime @default(now())
+}
