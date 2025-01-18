@@ -31,7 +31,6 @@ ENV NODE_ENV=production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 torbox-plex
 
-COPY --from=builder --chown=torbox-plex:nodejs /app/node_modules ./node_modules
 COPY --from=builder --chown=torbox-plex:nodejs /app/config ./config
 COPY --from=builder --chown=torbox-plex:nodejs /app/dist ./
 
