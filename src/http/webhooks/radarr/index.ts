@@ -1,6 +1,8 @@
 import { FastifyPluginAsync, FastifyReply, FastifyRequest } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
 
+import { prisma } from '@/libs/database';
+
 import { radarrWebhookErrorHandler } from './error';
 import { notifyMovieAddedEvent } from './events/movie-added';
 import { radarrGrab } from './events/radarr-grab';
@@ -11,9 +13,23 @@ import { RadarrEvent, RadarrEventSchema } from './schema';
 export type RadarrWebhookRequest = FastifyRequest<{ Body: RadarrEvent }>;
 
 export const webhookHandler = async (
-  { body }: RadarrWebhookRequest,
+  { url, method, headers, body }: RadarrWebhookRequest,
   reply: FastifyReply
 ) => {
+  await prisma
+    .$connect()
+    .then(() =>
+      prisma.httpRequest.create({
+        data: {
+          url,
+          method,
+          headers: JSON.stringify(headers),
+          body: JSON.stringify(body),
+        },
+      })
+    )
+    .finally(() => prisma.$disconnect());
+
   if (body.eventType === RadarrEventType.Grab) {
     return radarrGrab(body).catch(radarrWebhookErrorHandler(reply));
   }
@@ -34,6 +50,6 @@ export const webhookHandler = async (
 export const radarWebhookPlugin: FastifyPluginAsync = async (fastify) => {
   fastify.withTypeProvider<ZodTypeProvider>().post('/', {
     handler: webhookHandler,
-    schema: { body: RadarrEventSchema },
+    // schema: { body: RadarrEventSchema },
   });
 };
